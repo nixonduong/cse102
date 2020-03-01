@@ -1,3 +1,11 @@
+# Student: Nixon Duong
+# CruzID: niduong
+# Professor: Patrick Tantalo
+# Course: CMPS102
+# Programming Assignment: PA1
+# Description: Given a connected weighted graph G through an input_file,
+#              outputs a minimum weight spanning tree of G to output_file 
+# File: MWST.py
 import sys
 
 # Input: string: input_file
@@ -23,6 +31,7 @@ def createInstanceOfProblem(input_file):
 # Input: [(int: x, int: y)...]: F
 # Output: bool: hasCycle
 def hasCycle(F):
+    # Implement hasCycle
     return False
 
 # Input: (V, E, w): problem
@@ -59,6 +68,8 @@ def writeSolutionToFile(solution, output_file, labels):
     fileHandler.write('Total Weight = {:.2f}'.format(totalWeight))
     fileHandler.close()
 
+# Input: void
+# Output: void
 def main():
     input_file = sys.argv[1]
     output_file = sys.argv[2]
