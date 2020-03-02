@@ -20,7 +20,10 @@ def createInstanceOfProblem(input_file):
     labels = {}
     i = 1
     for edge in splitFile[2:]:
-        x, y, z = edge.split()
+        try:
+            x, y, z = edge.split()
+        except:
+            pass
         E.append((int(x), int(y)))
         w[(int(x), int(y))] = float(z)
         labels[(int(x), int(y))] = i
@@ -31,7 +34,7 @@ def createInstanceOfProblem(input_file):
 # Input: int: x, int: y, set[]: disjointSet, int[]: findSet
 # Output: set[]: disjointSet, int[]: findSet
 def union(x, y, disjointSet, findSet):
-    disjointSet[findSet[x]] = disjointSet[findSet[x]]|disjointSet[findSet[y]]
+    disjointSet[findSet[x]] = disjointSet[findSet[x]].union(disjointSet[findSet[y]])
     findSet[y] = findSet[x]
     return ((disjointSet, findSet))
 
@@ -51,14 +54,13 @@ def getMinimumSpanningTree(problem):
     for v in V:
         findSet[v] = i
         i += 1
-    vertexSet = {v for v in V}
     # Kruskal's Algorithm
     F = []
     for x, y in E:
-        if not disjointSet[findSet[x]] == disjointSet[findSet[y]]:
+        if len(disjointSet[findSet[x]].difference(disjointSet[findSet[y]])) > 0:
             F.append((x, y))
             disjointSet, findSet = union(x, y, disjointSet, findSet)
-        if vertexSet in disjointSet:
+        if len(F) == len(V) - 1:
             break
     # return minimum spanning tree of problem
     return ((V, F, w))
