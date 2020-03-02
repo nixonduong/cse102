@@ -31,12 +31,14 @@ def createInstanceOfProblem(input_file):
     fileHandler.close()
     return (((V, E, w), labels))
 
-# Input: int: x, int: y, set[]: disjointSet, int[]: findSet
-# Output: set[]: disjointSet, int[]: findSet
-def union(x, y, disjointSet, findSet):
-    disjointSet[findSet[x]] = disjointSet[findSet[x]].union(disjointSet[findSet[y]])
-    findSet[y] = findSet[x]
-    return ((disjointSet, findSet))
+def findSet(x, disjointSet):
+    i = 0
+    index = None
+    for i in range(len(disjointSet)):
+        if x in disjointSet[i]:
+            index = i
+            break
+    return index
 
 # Input: (V, E, w): problem
 # Output: (V, E, w): minimumSpanningTree
@@ -49,17 +51,14 @@ def getMinimumSpanningTree(problem):
     E = sorted(E, key=lambda edge: w[edge])
     # Initialization
     disjointSet = [set([v]) for v in V]
-    findSet = {}
-    i = 0
-    for v in V:
-        findSet[v] = i
-        i += 1
     # Kruskal's Algorithm
     F = []
     for x, y in E:
-        if len(disjointSet[findSet[x]].difference(disjointSet[findSet[y]])) > 0:
+        if len(disjointSet[findSet(x, disjointSet)].difference(disjointSet[findSet(y, disjointSet)])) > 0:
             F.append((x, y))
-            disjointSet, findSet = union(x, y, disjointSet, findSet)
+            setY = disjointSet[findSet(y, disjointSet)]
+            disjointSet.pop(findSet(y, disjointSet))
+            disjointSet[findSet(x, disjointSet)] = disjointSet[findSet(x, disjointSet)].union(setY)
         if len(F) == len(V) - 1:
             break
     # return minimum spanning tree of problem
@@ -73,7 +72,7 @@ def writeSolutionToFile(solution, output_file, labels):
     for edge in solution[1]:
         fileHandler.write('{:>4}: {} {:.1f}\n'.format(labels[edge], edge, solution[2][edge]))
         totalWeight += solution[2][edge]
-    fileHandler.write('Total Weight = {:.2f}\n'.format(totalWeight))
+    fileHandler.write('Total Weight = {:.2f}'.format(totalWeight))
     fileHandler.close()
 
 # Input: void
