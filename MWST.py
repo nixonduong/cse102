@@ -73,7 +73,7 @@ def writeSolutionToFile(solution, output_file, labels):
     for edge in solution[1]:
         fileHandler.write('{:>4}: {} {:.1f}\n'.format(labels[edge], edge, solution[2][edge]))
         totalWeight += solution[2][edge]
-    fileHandler.write('Total Weight = {:.2f}'.format(totalWeight))
+    fileHandler.write('Total Weight = {:.2f}\n'.format(totalWeight))
     fileHandler.close()
 
 # Input: void
