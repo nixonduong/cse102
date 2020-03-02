@@ -28,32 +28,38 @@ def createInstanceOfProblem(input_file):
     fileHandler.close()
     return (((V, E, w), labels))
 
-# Input: [(int: x, int: y)...]: F
-# Output: bool: hasCycle
-def hasCycle(F):
-    # Implement hasCycle
-    return False
+# Input: int: x, int: y, set[]: disjointSet, int[]: findSet
+# Output: set[]: disjointSet, int[]: findSet
+def union(x, y, disjointSet, findSet):
+    disjointSet[findSet[x]] = disjointSet[findSet[x]]|disjointSet[findSet[y]]
+    findSet[y] = findSet[x]
+    return ((disjointSet, findSet))
 
 # Input: (V, E, w): problem
 # Output: (V, E, w): minimumSpanningTree
 def getMinimumSpanningTree(problem):
-
     # Decompose problem into vertex set, edge set and weight function
     V = problem[0]
     E = problem[1]
     w = problem[2]
-
     # Sort all edges in accending weight
     E = sorted(E, key=lambda edge: w[edge])
-
+    # Initialization
+    disjointSet = [set([v]) for v in V]
+    findSet = {}
+    i = 0
+    for v in V:
+        findSet[v] = i
+        i += 1
+    vertexSet = {v for v in V}
     # Kruskal's Algorithm
     F = []
-    for edge in E:
-        if not hasCycle(F):
-            F.append(edge)
-        else:
-            del w[edge]
-
+    for x, y in E:
+        if not disjointSet[findSet[x]] == disjointSet[findSet[y]]:
+            F.append((x, y))
+            disjointSet, findSet = union(x, y, disjointSet, findSet)
+        if vertexSet in disjointSet:
+            break
     # return minimum spanning tree of problem
     return ((V, F, w))
 
